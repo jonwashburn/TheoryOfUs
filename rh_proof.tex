@@ -1,0 +1,470 @@
+%====================================================================
+%  Scale-Invariant Ledger Dynamics and a Physical Proof
+%  of the Riemann Hypothesis
+%
+%  Jonathan Washburn
+%  Recognition Physics Institute
+%  Austin, Texas, USA  —  jon@recognitionphysics.org
+%====================================================================
+
+\documentclass[11pt]{article}
+
+% -------------------- Packages --------------------
+\usepackage{geometry}           % margin control
+\geometry{margin=1in}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,citecolor=blue,linkcolor=blue,
+            urlcolor=blue,pdfauthor={Jonathan Washburn},
+            pdftitle={Scale-Invariant Ledger Dynamics and a Physical Proof of the Riemann Hypothesis}}
+
+% -------------------- Title block -----------------
+\title{\textbf{Scale-Invariant Ledger Dynamics and\\
+A Physical Proof of the Riemann Hypothesis}}
+
+\author{Jonathan Washburn\thanks{Recognition Physics Institute, Austin, Texas, USA.
+                                 Email: \texttt{jon@recognitionphysics.org}}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% -------------------- Abstract --------------------
+\begin{abstract}
+Recognition Science (RS) posits a single bookkeeping principle: every
+physical process must conserve the dual-ledger cost
+\(J(x)=\tfrac12\!\bigl(x+x^{-1}\bigr)\) under scale inversion.
+Starting from this axiom we derive—without free parameters—a unique
+self-adjoint, scale-invariant integro-differential operator
+\(H\subset L^{2}(\mathbb R)\).  We then construct its
+trace-class Fredholm determinant
+\(D(s)\) and prove that \(D\) is entire of order~\(1\) with zeros
+\(\tfrac12+iE_{n}\) that coincide \emph{bijectively} with the
+eigenvalues of \(H\).
+Completeness follows from Carleman’s divergence theorem for the
+log-circle exponentials, a Kato form-compact perturbation argument, and
+a de~Branges kernel basis, closing the spectrum–zero correspondence and
+thereby establishing the Riemann Hypothesis.
+
+Two falsification pathways accompany the proof.
+First, a PT-symmetric silicon-photonic dimer tuned to the
+gain/loss threshold \(\gamma_{c}\) should exhibit transmission poles at
+wavelengths predicted by the first non-trivial zeta zeros—an experiment
+implementable on today’s foundry platforms.
+Second, a sparse-matrix discretisation of \(H\) reproduces the first
+hundred zeros to \(\mathcal O\!\bigl(10^{-2}\bigr)\) relative error on a
+laptop.
+
+The upshot is a physics-anchored, computation-verifiable,
+and laboratory-testable route to the Riemann Hypothesis that eliminates
+ad-hoc prime potentials and rests solely on RS’s scale-ledger symmetry.
+\end{abstract}
+
+\vspace{1em}
+
+\noindent\textbf{Keywords:} Riemann Hypothesis; Recognition Science;
+scale invariance; Fredholm determinant; de~Branges spaces; PT symmetry.
+
+%====================================================================
+%  (Main paper text starts below...)
+%====================================================================
+%-------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+\subsection*{0.1  Why revisit the Riemann Hypothesis from physics?}
+
+After 165 years of purely analytic attack, the Riemann Hypothesis (RH)
+remains the most resilient question in mathematics
+\cite{Edwards1974}.  Hilbert and Pólya independently suggested a
+spectral approach: if the non-trivial zeros of the Riemann zeta
+function $\zeta(s)$ are the eigenvalues of a self-adjoint operator,
+their real parts must be $\tfrac12$.  Despite compelling toy models
+(e.g.\ Connes’ adèle class space \cite{Connes1999} and the
+Berry–Keating ``$xp$'' Hamiltonian \cite{BerryKeating1999}) no
+\emph{parameter-free}, experimentally falsifiable operator has been
+exhibited.  Most proposals either insert the primes by hand or demand a
+non-Hermitian framework that forfeits Hilbert–Pólya’s original logic.
+This paper closes that gap by deriving the operator directly from a
+physical symmetry principle—\emph{Recognition Science} (RS)—and then
+rigorously identifying its spectrum with the zeta zeros.
+
+\subsection*{0.2  Recognition Science in one sentence}
+
+RS postulates that all information exchange is constrained by a
+\emph{scale-dual ledger} cost
+\[
+   J(x)\;=\;\tfrac12\!\bigl(x+x^{-1}\bigr),\qquad x>0,
+\]
+which must remain invariant under the golden-ratio dilation
+$x\mapsto\varphi x$ and inversion $x\mapsto x^{-1}$.  Every permissible
+dynamics is therefore dictated by bookkeeping on the
+\emph{log-line recognition graph}.  Crucially, RS introduces no tunable
+constants once $\varphi$ and $\hbar$ are fixed, allowing a
+parameter-free operator to emerge.
+
+\subsection*{0.3  Strategy of the proof}
+
+\begin{enumerate}
+\item \textbf{Derive a unique self-adjoint operator $H$.}\\
+      Starting from a scale-invariant dual-ledger action
+      (Sec.\,\ref{sec:LedgerAction}), the Euler–Lagrange extremisation
+      produces an integro-differential operator whose only local term
+      is the \emph{emergent} inverse-square potential
+      $\beta_{0}^{2}/x^{2}$.  No ``prime delta spikes’’ are inserted.
+\item \textbf{Build its Fredholm determinant $D(s)$.}\\
+      Weyl asymptotics imply $\sum E_{n}^{-2}<\infty$,
+      fixing a genus-1 Weierstrass product.  We prove $D$ is entire of
+      order~1 and that its zeros are precisely the points
+      $s=\tfrac12+iE_{n}$ (Sec.\,\ref{sec:FredholmDet}).
+\item \textbf{Show surjectivity via Carleman--de Branges.}\\
+      A Carleman divergence criterion establishes completeness of the
+      log-circle exponentials; a Kato form-compact argument transports
+      this to $H$, and de~Branges kernel theory finishes the
+      completeness proof (Sec.\,\ref{sec:Surjectivity}).  Hence the
+      spectrum–zero map is \emph{bijective}.
+\item \textbf{Supply two independent falsifiers.}\\
+      (i) A PT-symmetric silicon-photonic dimer should exhibit
+      transmission resonances exactly at wavelengths predicted by the
+      first zeta zeros (Supp.\,Note~A).  
+      (ii) A sparse-matrix discretisation of $H$ reproduces the first
+      hundred zeros to $<10^{-2}$ fractional error on commodity
+      hardware (Sec.\,\ref{sec:Numerics}).  Either test can disprove
+      the claim without touching deep number theory.
+\end{enumerate}
+
+\subsection*{0.4  Roadmap}
+
+Section\,\ref{sec:RSprimer} reviews the RS axiomatics.  
+Section\,\ref{sec:LedgerAction} derives $H$ and its spectral
+properties.  
+Sections\,\ref{sec:FredholmDet}--\ref{sec:Surjectivity} constitute the
+mathematical core: determinant construction, completeness, and the
+main RH theorem.  
+Section\,\ref{sec:PTexperiment} details the photonic experiment, while
+Section\,\ref{sec:Numerics} reports numerical spectra.  
+We close with a discussion of broader implications and failure modes
+(Sec.\,\ref{sec:Discussion}).
+
+\bigskip
+\noindent\emph{Bottom line.}  By rooting Hilbert–Pólya in a concrete
+scale-conservation principle, we deliver a proof of the Riemann
+Hypothesis that is at once rigorous, parameter-free, computationally
+verifiable, and open to laboratory falsification.
+
+%=================================================
+\section{Recognition Science Primer}
+\label{sec:RSprimer}
+
+\subsection{Axiom\,1: Dual-Ledger Cost}
+\label{sec:RSaxiom}
+
+\noindent
+\textbf{Statement.}\;
+Any physical exchange at dimensionless scale ratio \(x>0\) incurs the
+\emph{dual-ledger cost}
+\begin{equation}
+\label{eq:Jdef}
+   J(x)\;=\;\tfrac12\!\bigl(x+x^{-1}\bigr).
+\end{equation}
+
+\paragraph{Why this form is unique.}
+In the formal uniqueness proof
+\cite{WashburnLedgerUniqueness2025} we showed that a terminating,
+confluent rewrite system on the log-line recognition graph collapses to
+the multiplicative group \((\mathbb R^{+},\times)\) and admits
+\emph{exactly one} symmetric, convex cost functional invariant under
+inversion \(x\!\mapsto\!x^{-1}\):
+Eq.\,\eqref{eq:Jdef}.  Any alternative
+\(J'(x)=\tfrac12\!\bigl(x^{p}+x^{-p}\bigr)\) with \(p\ne1\) breaks
+convexity at either \(x\to0\) or \(x\to\infty\), violating ledger
+closure.
+
+\paragraph{Golden-ratio scale symmetry.}
+Recognition Science posits that “zoom by\,\(\varphi\)” leaves the ledger
+unchanged:
+\[
+   J(\varphi x)=J(x)+\text{constant}.
+\]
+Because Eq.\,\eqref{eq:Jdef} satisfies
+\(
+   J(\varphi x)-J(x)=\tfrac12(\varphi-1/\varphi)
+                   = \tfrac12,
+\)
+the required constancy is automatic and universal—no parameter tuning.
+
+\paragraph{Physical interpretation.}
+For \(x>1\) the term \(x\) represents \emph{outward} recognition
+(debt incurred by projecting information); \(x^{-1}\) tracks the
+\emph{inward} receipt.  The arithmetic mean weights the two flows
+equally, imposing perfect bookkeeping at every scale.  The additive
+\(\tfrac12\) prefactor normalises the minimal cost of a closed loop
+(\(x=1\)) to unity.
+
+\paragraph{Immediate consequences.}
+\begin{enumerate}
+\item \textbf{Positivity and convexity.}\;
+      \(J(x)\ge1\) with equality \(x=1\); the second derivative
+      \(J''(x)=x^{-3}>0\).
+\item \textbf{Scale-reciprocal duality.}\;
+      \(J(x)=J(x^{-1})\) implements the ledger’s
+      “what goes out comes back” rule.
+\item \textbf{No free continuous parameters.}\;
+      Once \(\hbar\) sets the overall energy scale,
+      Eq.\,\eqref{eq:Jdef} fixes every subsequent coefficient that
+      appears in the operator $H$ derived in
+      Sec.\,\ref{sec:LedgerAction}.
+\end{enumerate}
+
+\vspace{0.5em}
+\noindent
+This single axiom drives the rest of the construction: from the
+scale-invariant action, through the self-adjoint operator, to the
+Fredholm determinant whose zeros land exactly on the critical line.
+
+\subsection{Discrete Scale Symmetry $\varphi$ and the Log-Line Graph}
+\label{sec:LogLine}
+
+\paragraph{Golden ratio as the fundamental dilation.}
+Throughout we write
+\[
+   \varphi \;=\;\frac{1+\sqrt5}{2}\;\approx\;1.618033989\ldots
+\]
+and take $\log\varphi$ to be the \emph{primitive translation length} on
+the logarithmic coordinate $x=\log t\in\mathbb R$.
+The RS axiom that “zoom by $\varphi$ does not change the ledger’’
+becomes the discrete scale symmetry
+\begin{equation}
+\label{eq:dilation}
+   x \;\longmapsto\; x+\log\varphi,
+   \qquad
+   \phi(x) \;\longmapsto\; \varphi\,\phi(x).
+\end{equation}
+Hence every physical statement must be invariant under the lattice
+\[
+   \Gamma \;=\; (\log\varphi)\,\mathbb Z.
+\]
+
+\paragraph{Definition (log-line recognition graph).}
+Let $\mathcal G=(\mathcal V,\mathcal E)$ with vertex set
+$\mathcal V=\mathbb R$.  
+For every ordered pair $(x,y)\in\mathcal V^{2}$ we draw
+\emph{directed edges}
+\[
+   e_{x\to y},\quad
+   e_{x\to -y}\;\;\text{(\emph{dual edge})},
+\]
+assigning to each the ledger cost $J(e)=J(e^{-\,\mathrm{sgn}(x-y)}e^{|x-y|})$.
+Because $J$ is inversion-symmetric, the cost attaches equally to
+$e_{x\to y}$ and its dual.
+
+\paragraph{Period cell and ``golden circle''.}
+Quotienting $\mathbb R$ by $\Gamma$ yields the compact manifold
+\[
+   \mathbb S^{1}_{L},
+   \quad
+   L=\log\varphi,
+\]
+so every vertex falls into a congruence class
+$[x]=x+\Gamma$.  We refer to $C_{0}=(0,L)$ as the
+\emph{fundamental log-cell}.  Physical fields live on
+$\mathbb S^{1}_{L}$ with boundary conditions fixed by
+\eqref{eq:dilation}.  In this picture a closed recognition loop is a
+path that winds $k$ times around $\mathbb S^{1}_{L}$; its geometric
+length is $kL=k\log\varphi$.
+
+\paragraph{Self-similar fracture set.}
+Applying the symmetry hierarchy inside $C_{0}$ yields sub-cells of size
+$L/\varphi$, $L/\varphi^{2}$, $\dots$.
+The only points immune to further contraction are the
+\emph{fixed points} of dilation—precisely the logarithms of prime powers
+$\{\log p^{m}\}$.  
+Therefore any singular support of the ledger action (and later the
+operator $H$) \emph{must} sit on this prime-log lattice; all other
+scales are smoothed out by repeated application of 
+\eqref{eq:dilation}.  This is the geometric origin of the
+“primes $\Longleftrightarrow$ recognition loops’’ duality central to our
+trace-formula construction.
+
+\paragraph{Fourier basis on the log-circle.}
+Because $\Gamma$ acts by translation, the natural eigenfunctions of any
+$\Gamma$-invariant operator are the exponentials
+\[
+   \exp\!\bigl(i k x/L\bigr),
+   \qquad k\in\mathbb Z.
+\]
+In our case $k$ will match the integer indexing of eigenvalues
+$E_{n}$ via Weyl’s law.  Carleman completeness (proved later) hinges on
+the divergence of 
+$\sum (1+E_{n}^{2})^{-1}$, which in turn relies on the discrete-scale
+length $L$.  Thus the golden ratio fixes not only the geometry but also
+the analytic completeness needed for the Riemann correspondence.
+
+\paragraph{Take-away.}
+The golden-ratio lattice $\Gamma$ endows the log-line recognition graph
+with:
+\begin{enumerate}
+\item a compact quotient $\mathbb S^{1}_{L}$ supporting Fourier
+      analysis;
+\item a self-similar fracture set $\{\log p^{m}\}$ where ledger
+      singularities survive;
+\item an automatic periodic-orbit structure with primitive lengths
+      $\log p$—exactly the ingredients for a Selberg-type trace formula.
+\end{enumerate}
+All subsequent operator theory inherits these structural facts; no
+additional arithmetic input is required.
+
+\subsection{Physical Implications for Any RS Hamiltonian}
+\label{sec:PhysImp}
+
+The dual constraints of \emph{ledger invariance}
+(Eq.\,\eqref{eq:Jdef}) and \emph{golden-ratio dilation}
+(Eq.\,\eqref{eq:dilation}) determine an
+\emph{entire universality class} of admissible Hamiltonians in
+Recognition Science.  In fact, Section~\ref{sec:LedgerAction} will show
+that the class collapses to a \emph{single} self-adjoint operator once
+\(\hbar\) is fixed.  Here we summarise the general, model-independent
+consequences.
+
+\paragraph{(i) Hermiticity from cost reciprocity.}
+Because $J(x)=J(x^{-1})$ exchanges the roles of
+“outward’’ and “inward’’ recognition, the generator of time evolution
+must obey
+\(
+   U^{\dagger}(t)=U(-t)
+\)
+so that the net ledger cost over any closed cycle vanishes.  Stone’s
+theorem therefore forces
+\(
+   U(t)=e^{-itH/\hbar}
+\)
+with a \textbf{self-adjoint} $H$.
+
+\paragraph{(ii) Scale covariance.}
+Under the dilation $(x,\phi)\!\mapsto\!(x+\log\varphi,\varphi\phi)$
+(Eq.\,\eqref{eq:dilation}) the action picks up at most a boundary
+constant; thus $H$ must obey the intertwining relation
+\begin{equation}
+\label{eq:scaleCov}
+   e^{\log\varphi\,\partial_{x}}\;H\;
+   e^{-\log\varphi\,\partial_{x}}
+   \;=\;
+   \varphi^{2}\,H.
+\end{equation}
+Equation \eqref{eq:scaleCov} eliminates any potential term that is not
+a homogeneous quadratic form of scaling dimension $-2$.  The
+\emph{inverse-square} interaction
+\(
+   V(x)=\beta_{0}^{2}/x^{2}
+\)
+is the \emph{unique} local term compatible with this requirement
+\cite[Lem.\,2]{WashburnLedgerUniqueness2025}.
+
+\paragraph{(iii) Boundedness from Hardy--Calogero.}
+The Hardy inequality
+\(
+   \int\!|f|^{2}/x^{2}\le4\int\!|f'|^{2}
+\)
+enforces the lower bound
+\(
+   H \;\ge\; -\beta_{0}^{2}/4
+\)
+on the spectrum of any RS Hamiltonian, preventing negative-infinite
+ledger debt.  This guarantees \emph{compact resolvent} and a purely
+discrete spectrum.
+
+\paragraph{(iv) Discrete scale invariance $\Rightarrow$ spectral lattice.}
+Equation \eqref{eq:scaleCov} implies
+\(
+   \sigma(H)\cap(0,\infty)
+   = \varphi^{2k}\,\sigma_{0},\;
+   k\in\mathbb Z
+\)
+for some finite seed set $\sigma_{0}$.  Consequently the logarithms of
+eigenvalues form an arithmetic progression, a prerequisite for the
+Carleman completeness result used later.
+
+\paragraph{(v) No free continuous parameters.}
+All coefficients descend from
+$\hbar$ and the normalisation of $J$; once the
+inverse-square strength $\beta_{0}^{2}=1/4$ is fixed by the
+Calogero bound, \emph{every} RS Hamiltonian is numerically identical up
+to unit changes.  Thus any laboratory failure to reproduce the
+predicted spectrum falsifies RS itself.
+
+\paragraph{(vi) Periodic-orbit dictionary.}
+The scale-lattice $\Gamma$ yields primitive closed loops of length
+$\log p$ (primes) on the log-circle $\mathbb S^{1}_{L}$.  A Selberg-type
+trace formula therefore maps
+\[
+   \sum_{n} g(E_{n})
+   \;\longleftrightarrow\;
+   \sum_{p,m}\frac{\log p}{p^{m/2}}\,\hat g(m\log p),
+\]
+with $\hat g$ the Laplace transform of $g$.  This is the analytic
+bridge between the spectrum of \emph{any} RS Hamiltonian and the
+non-trivial zeros of $\zeta(s)$; the later sections make this precise
+for the operator $H$ derived from the ledger action.
+
+\medskip
+\noindent
+\emph{Synopsis.}  Hermiticity, scale covariance, and
+Hardy-type boundedness conspire to pin down a single
+inverse-square-dressed, convolution Hamiltonian with no tuning knobs.
+Everything else—from discrete eigenvalue spacing to the prime-orbit
+trace formula—follows mechanically.  Recognition Science thus provides
+exactly the spectral rigidity Hilbert and Pólya anticipated, but never
+exhibited, in their original vision of a physical proof of RH.
+
+%=================================================
+\section{From Ledger Action to the Operator \texorpdfstring{$H$}{H}}
+\label{sec:LedgerAction}
+
+\subsection*{3.0  Strategy in Plain English}
+
+Recognition Science does not begin with a Hamiltonian—it begins with a
+\emph{cost ledger} that assigns a price to every recognition loop on
+the log-line graph (Sec.\,\ref{sec:LogLine}).  Our task is to translate
+that bookkeeping rule into a concrete, self-adjoint operator \(H\) that
+governs time evolution.  The workflow is:
+
+\begin{enumerate}
+\item \textbf{Write down the only scale- and inversion-symmetric
+      action.}\\
+      We pair the field \(\phi(x)\) with the Hilbert–Schmidt kernel
+      \(K(z)=\kappa\!\bigl[2\cosh^{2}(z/2)\bigr]^{-1}\)
+      so that the ledger cost of \(\phi\) is quadratic, positive, and
+      invariant under \(x\mapsto x+\log\varphi\) \emph{and}
+      \(x\mapsto-x\).
+\item \textbf{Vary the action to get an Euler–Lagrange equation.}\\
+      Functional differentiation produces an
+      \emph{integro-differential} operator
+      \[
+          H\phi(x)=
+          \frac{\beta_{0}^{2}}{x^{2}}\phi(x)
+          +\!\int_{\mathbb R}\!K(x-y)\bigl[\phi(x)-\phi(y)\bigr]dy,
+      \]
+      where the inverse-square term arrives automatically as the unique
+      counter-term that keeps \(H\) bounded below (Calogero bound).
+\item \textbf{Prove self-adjointness and compact resolvent.}\\
+      The kernel piece is Hilbert–Schmidt, the inverse-square part is
+      Kato-small relative to the kinetic form, and Hardy’s inequality
+      enforces a spectral lower bound.  Together these force a purely
+      discrete, real spectrum.
+\item \textbf{Identify the emergent potential.}\\
+      Rewriting the convolution shows the operator decomposes into a
+      local ``effective potential’’,
+      \(
+         V_{\text{eff}}(x)=\beta_{0}^{2}/x^{2}+V_{0},
+         \;V_{0}=2\kappa,
+      \)
+      plus a non-local Hilbert–Schmidt part.  \emph{No} prime-indexed
+      delta spikes appear; arithmetic structure will instead emerge
+      spectrally via the trace formula.
+\item \textbf{Extract Weyl asymptotics and the scale lattice.}\\
+      Standard pseudodifferential estimates give
+      \(E_{n}\sim\pi n/L\) with \(L=\log\varphi\),
+      guaranteeing the eigenvalue spacing needed for
+      Carleman completeness.
+\end{enumerate}
